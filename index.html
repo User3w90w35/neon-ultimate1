@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>NP | ONLY ONE WINNER</title>
+    <style>
+        :root { --blue: #00f2ff; --purple: #bc13fe; --gold: #ffd700; --red: #ff3e3e; }
+        body { background: #050506; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        
+        h1 { font-size: 3.5rem; color: var(--blue); text-shadow: 0 0 25px var(--blue); margin-bottom: 5px; font-weight: 900; }
+        .subtitle { color: var(--red); letter-spacing: 3px; margin-bottom: 40px; font-weight: bold; text-transform: uppercase; }
+
+        .leaderboard { width: 100%; border-collapse: separate; border-spacing: 0 12px; }
+        .row { background: rgba(255, 255, 255, 0.02); transition: 0.3s; }
+        .row td { padding: 20px; vertical-align: middle; border-top: 1px solid rgba(255,255,255,0.05); }
+        
+        .rank-1 { border-left: 8px solid var(--red); background: rgba(255, 62, 62, 0.05) !important; }
+        .rank-2 { border-left: 8px solid var(--gold); background: rgba(255, 215, 0, 0.05) !important; }
+
+        .team-info { text-align: left; }
+        .team-name { font-size: 1.4rem; font-weight: bold; color: #fff; display: block; }
+        .players { font-size: 0.85rem; color: #888; letter-spacing: 1px; }
+        
+        .points { color: var(--blue); font-family: monospace; font-size: 1.3rem; font-weight: bold; }
+
+        .btn-claim { 
+            background: transparent; border: 2px solid #333; color: #555; 
+            padding: 12px 25px; cursor: pointer; text-transform: uppercase; font-weight: 900;
+            border-radius: 5px; transition: 0.3s;
+        }
+        .rank-1 .btn-claim { border-color: var(--red); color: var(--red); }
+        .rank-1 .btn-claim:hover { background: var(--red); color: #fff; box-shadow: 0 0 20px var(--red); }
+        
+        .rank-2 .btn-claim { border-color: var(--gold); color: var(--gold); }
+        .rank-2 .btn-claim:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
+
+        #overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center;
+        }
+        .cert {
+            width: 90%; max-width: 750px; padding: 60px; border: 15px double var(--gold);
+            background: #111; position: relative; text-align: center;
+        }
+        .cert h2 { font-size: 4rem; color: var(--gold); font-family: serif; margin: 0; text-shadow: 0 0 20px var(--gold); }
+        .cert-team { font-size: 2.5rem; color: #fff; margin: 20px 0; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .close { position: absolute; top: 15px; right: 25px; font-size: 3rem; cursor: pointer; color: #444; }
+    </style>
+</head>
+<body>
+
+<div id="overlay">
+    <div class="cert">
+        <span class="close" onclick="closeCert()">×</span>
+        <h2>CERTIFICATE</h2>
+        <p style="font-size: 1.1rem; color: #aaa;">OFFICIAL PARTICIPANT RECOGNITION</p>
+        <div class="cert-team">NEON PHANTOMS</div>
+        <p style="font-size: 1.8rem;">RANK: <span style="color: var(--gold);">#2 GLOBAL</span></p>
+        <div style="margin-top: 40px;">
+            <p style="color: #fff; font-size: 1rem;">ROSTER:</p>
+            <p style="color: var(--gold); font-size: 1.4rem; font-weight: bold;">S-KAMRON (CAP) | D-WAVE | T-SHOCK</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>CYBERSPORT LEADERBOARD</h1>
+    <p class="subtitle">WINNER TAKES ALL: 500.000 RUB</p>
+
+    <table class="leaderboard">
+        <tbody id="table-body"></tbody>
+    </table>
+</div>
+
+<script>
+    const teams = [
+        { name: "APEX PREDATORS", players: "JOKER, BEAST, STORM", pts: "22,450", rank: 1 },
+        { name: "NEON PHANTOMS", players: "S-KAMRON, D-WAVE, T-SHOCK", pts: "21,910", rank: 2 },
+        { name: "SHADOW WALKERS", players: "NIGHT, GHOST, BLADE", pts: "19,800", rank: 3 }
+    ];
+
+    for(let i=4; i<=20; i++) {
+        teams.push({ name: "TEAM " + i, players: "X, Y, Z", pts: (18000 - i*600).toLocaleString(), rank: i });
+    }
+
+    const tbody = document.getElementById('table-body');
+    teams.forEach((t, i) => {
+        const row = document.createElement('tr');
+        row.className = `row rank-${t.rank}`;
+        row.innerHTML = `
+            <td style="width: 60px; font-weight: 900;">#${t.rank}</td>
+            <td class="team-info">
+                <span class="team-name">${t.name}</span>
+                <span class="players">${t.players}</span>
+            </td>
+            <td class="points">${t.pts}</td>
+            <td style="text-align: right;">
+                <button class="btn-claim" onclick="handle(${i})">Claim</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    function handle(index) {
+        if(index === 0) alert("💰 ВЫПЛАТА: 500.000 РУБЛЕЙ.\nДоступно только для Apex Predators.");
+        else if(index === 1) document.getElementById('overlay').style.display = 'flex';
+        else alert("ОШИБКА: Денежный приз не предусмотрен для данного места.");
+    }
+    function closeCert() { document.getElementById('overlay').style.display = 'none'; }
+</script>
+</body>
+</html>
